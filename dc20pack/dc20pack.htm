@@ -1,0 +1,222 @@
+<HTML>
+<HEAD>
+  <TITLE>DC20 Software Pack</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<H1>
+  DC20 Software Pack
+</H1>
+<P>
+There are two programs written by myself
+(<A HREF="mailto:Oliver.Hartmann@t-online.de">Oliver.Hartmann@t-online.de</A>):
+<BR>
+DC20Term transfers the pictures out of the camera and stores they as raw
+data files - like the change for a new film. <BR>
+DC2toTGA converts those raw data files to standard image files - like the
+development of the film.
+<P>
+So you get the pictures out of your camera as quick as possible and you are
+ready for the next shots. Later, to get the best results, you can convert
+the raw data files to standard image files as often you like.
+<P>
+The actual versions of both programs are available for DOS, Win16, Win32
+and Linux. <BR>
+See:
+<A HREF="http://home.t-online.de/home/oliver.hartmann">http://home.t-online.de/home/oliver.hartmann</A>
+<P>
+<H3>
+  Kodak DC20 Terminal: DC20Term
+</H3>
+<P>
+For the first time, you can just plug in the camera and dump all the images
+out of it - only with one keystroke. No answering millions of questions with
+the mouse, and all the tedious work in the twain module and the image software,
+to finally end up the files in one directory.
+<P>
+Features:
+<UL>
+  <LI>
+    very quick and simple to use
+  <LI>
+    runs on any DOS computer (e.g. an old portable)
+  <LI>
+    transfers all images from camera to disk in batch mode
+  <LI>
+    supports all camera functions (e.g. res change, erase, etc.)
+  <LI>
+    stores images in raw data format (like inside the camera) - so you can save
+    a lot of disk space
+  <LI>
+    automatic retry fixes 'Wrong data' errors
+  <LI>
+    works on all DOS machines down to XTs (as HP 200LX)
+  <LI>
+    minimized code size
+  <LI>
+    S command shows shutter speed and aperture
+  <LI>
+    X command for download with exit (batch mode)
+  <LI>
+    V option for time-lapse videos
+  <LI>
+    Version 2.0 or later now works with <BIG><B>DC20 and DC25</B></BIG>
+</UL>
+<P>
+See the short&nbsp;<A HREF="#hints1">User's Guide</A>!
+<P>
+<H3>
+  DC2-to-TGA-File-Converter: DC2toTGA
+</H3>
+<P>
+After use of DC20Term you want to see your pictures. <BR>
+DC2toTGA converts the raw data files to a standard image format (Targa).
+<BR>
+<P>
+See the short <A HREF="#hints2">User's Guide</A>!
+<P>
+Features:
+<UL>
+  <LI>
+    simple to use
+  <LI>
+    can convert all files in batch mode
+  <LI>
+    a lot of options to get optimal images
+  <LI>
+    needs no camera to run
+  <LI>
+    as DOS, Win16&nbsp;and Win32 application available
+  <LI>
+    provides 375*496 images
+  <LI>
+    you can get better results (compared to the KODAK Twain Module V1.0)!
+</UL>
+<P>
+<H2>
+  <A NAME="hints1"><!-- --></A>Tips for DC20Term users
+</H2>
+<P>
+The program reads the data bytes sending by the camera via polling. Since
+the camera provides no handshake signals, this is a real time job and could
+go wrong in a multitasking environment. Maybe you must reduce the baud rate
+to avoid communication problems.
+<P>
+<H3>
+  Troubleshooting:
+</H3>
+<P>
+<UL>
+  <LI>
+    Best environment for the DOS version dc20term.exe is plain DOS
+  <LI>
+    Best interface is a hardware buffered com port (16550 UART with FIFO). Use
+    Option -F with the DOS version.
+  <LI>
+    If there is only a 8250 UART the maximum baud rate depends on your system
+    speed. Use option -B to find the optimum.
+  <LI>
+    If you want to use the DOS program in a multitasking environment (like
+    MS-Windows), run it in a high priority DOS-Box (e.g. through PIF). Full screen
+    mode works much better than a DOS window.
+  <LI>
+    Pay attention to correct parameter settings. If you start without any parameter
+    it works well in most cases (com port parameter is essential if not equal
+    to COM1). See 'Syntax Examples' below.
+</UL>
+<P>
+<H3>
+  Syntax Examples:<BR>
+</H3>
+<UL>
+  <LI>
+    DC20TERM -B57600 -C2 -F<BR>
+    means:<BR>
+    - baud rate: 57,600<BR>
+    - com port: 2 <BR>
+    - looking for a 16550 UART (com port with FIFO)
+  <LI>
+    Option -F:<BR>
+    without this option a FIFO is ignored,<BR>
+    with -F the program test the com port for a FIFO - if a FIFO will be found,
+    it will be used and there is a note 'xxx baud (using FIFO)' on the first
+    line - if no FIFO will be found you get the message 'xxx baud (no FIFO found)'
+    on the first line.
+  <LI>
+    default values are -B9600, -C1, ignore FIFO<BR>
+    In most cases it works well, but with 9600 baud the picture download takes
+    some minutes.
+  <LI>
+    I use the program with these parameters:<BR>
+    DC20TERM -B115200 -F<BR>
+    It works well (also under Win95) and the download of a high resolution picture
+    (124,928 byte) takes about 15 seconds.
+  <LI>
+    Option -V (version 1.43 or higher):<BR>
+    DC20TERM -V100<BR>
+    - takes 100 pictures in time-lapse video mode<BR>
+    - actions: erase, take picture, download, erase, take picture, ... and so
+    on<BR>
+    - frame rate depends on baud rate
+  <LI>
+    batch processing:<BR>
+    DC20TERM &lt;cmd.txt <BR>
+    or<BR>
+    DC20TERM -C2 -B115200 -F &lt;cmd.txt<BR>
+    - cmd.txt should contain the keystroke commands<BR>
+    - D command will not work in batch mode =&gt; use X command (version 1.43
+    or higher)
+</UL>
+<P>
+<H2>
+  <A NAME="hints2"><!-- --></A>Tips for DC2toTGA users
+</H2>
+<P>
+Versions before 1.40 convert only high resolution .dc2 files.<BR>
+<B>Version 1.40 or later now converts high and low res pictures.</B>
+<P>
+The images created with the Kodak software (or the Chinon software) and the
+output of DC2toTGA often differ. The main reason is the higher contrast of
+the Kodak images. You can get quite similar results with the parameter -v0.65.
+But you lose a lot of details in the shadows. That's why I set the gamma
+default to 0.5. Another difference is the color adjustment: Try changing
+of red factor (e.g. to 0.7 or 0.75) or blue factor (e.g. 0.9).
+<H3>
+  Syntax Examples:<BR>
+</H3>
+<UL>
+  <LI>
+    DC2toTGA -a<BR>
+    will convert all files stored with DC20term (e.g. DC_001.DC2 to DC_008.DC2)
+  <LI>
+    DC2toTGA my_pic1<BR>
+    will convert MY_PIC1.DC2
+  <LI>
+    DC2toTGA -x25<BR>
+    will convert the file DC_025.DC2
+  <LI>
+    DC2toTGA -x4 -a<BR>
+    will convert DC_004.DC2 and all files up to DC_999.DC2 (if exist)
+  <LI>
+    DC2toTGA -a -v0.7<BR>
+    will convert all files (see above) using a gamma value of 0.7 (more contrast)
+  <LI>
+    DC2toTGA -o0<BR>
+    no finishing (sharpen)
+</UL>
+<P>
+In&nbsp;most cases the default values are good enough. If the resulting image
+looks bad, start again with different settings for saturation, gamma value
+or norm_percentage.
+<P>
+  <HR>
+<P ALIGN=Center>
+&copy; Copyright
+<A HREF="mailto:Oliver.Hartmann@t-online.de">Oliver.Hartmann@t-online.de</A>
+1998. <BR>
+All Rights Reserved. <BR>
+Last Update: 10 October 1998
+<P ALIGN=Center>
+Homepage:
+<A HREF="http://home.t-online.de/home/oliver.hartmann">http://home.t-online.de/home/oliver.hartmann</A>
+<P>
+</BODY></HTML>

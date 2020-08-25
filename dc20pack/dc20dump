@@ -1,0 +1,2 @@
+./dc20term -C2 -B115200 < dc20dump.cmd
+./dc2totga <dc2tga.cmd

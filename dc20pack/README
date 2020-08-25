@@ -1,0 +1,29 @@
+DC20Pack - the Software Package for Kodak DC20 and DC25 digital cameras.
+
+It contains dc20term and dc2totga - see dc20pack.htm for details.
+If you like it quick and simple you should edit and run the script dc20dump
+
+dc20dump will dump out all pictures from your camera and convert it to
+Targa24 image files.
+
+First start make to get dc20term and dc2totga executables.
+
+Check the script dc20dump for the parameters of dc20term and change
+it if necessary:
+-C2 means the camera is connected to COM2
+-B115200 means 115200 Baud
+
+Be sure you have access to the serial devices:
+/dev/ttyS0 for COM1
+/dev/ttyS1 for COM2
+/dev/ttyS2 for COM3
+/dev/ttyS3 for COM4
+
+Now switch on your camera and run dc20dump. 
+
+How it works:
+dc20term stores all pictures as raw data files (dc_NNN.dc2) and generates 
+the file dc2tga.cmd. Now dc2totga knows what to do: It converts the dc_NNN.dc2
+files to dc_NNN.tga files.
+
+Oliver.Hartmann@t-online.de
