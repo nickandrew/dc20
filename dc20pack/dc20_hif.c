@@ -261,7 +261,7 @@ void close_dc20(void)
 int get_status(void)
 {
   int wait= 10;
-  int error=0, dmy;
+  int error=0;
 
   while ( (error=(send_cmd(cmd_init)))!=0 && --wait) ;
 
