@@ -113,7 +113,11 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
 
       for (line= 0; line < 60; line++)
       {
-        fread(ccd[line], 1, 80, infd);
+        size_t n = fread(ccd[line], 1, 80, infd);
+        if (n < 80) {
+          fprintf(stderr, "Short read! %ld < 80\n", n);
+          exit(2);
+        }
         for (column= 0; column< 80; column++)
           if (ccd[line][column] > thmb_max)
             thmb_max= ccd[line][column];
@@ -159,7 +163,11 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
     {
       for (column= 0; column< COLUMNS; column+=4)
       {
-        fread(&ccd[line][column], 1, 2, infd);
+        size_t n = fread(&ccd[line][column], 1, 2, infd);
+        if (n < 2) {
+          fprintf(stderr, "Short read! %ld < 2\n", n);
+          exit(2);
+        }
         ccd[line][column+2]= ccd[line][column];
         ccd[line][column+3]= ccd[line][column+1];
       }
@@ -197,7 +205,11 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
 
     for (line= 0; line < LINES; line++)
     {
-      fread(ccd[line], 1, COLUMNS, infd);
+      size_t n = fread(ccd[line], 1, COLUMNS, infd);
+      if (n < COLUMNS) {
+        fprintf(stderr, "Short read! %ld < %d\n", n, COLUMNS);
+        exit(2);
+      }
 
       for (column= 0; column< COLUMNS; column++)
         if (ccd[line][column] < 2)
