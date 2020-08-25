@@ -1,0 +1,69 @@
+Summary: Utilities for Kodak DC20 Digital Camera
+Name: dc20
+Version: 1.0
+Release: 1
+Copyright: LGPL
+Source:  dc20.tgz
+Group: X11/Applications
+Distribution: Red Hat Contrib|Net
+Icon: dc20.gif
+Packager: Red Hat Contrib|Net <rhcn-bugs@redhat.com>
+Requires: tk, libgr, libjpeg
+
+%description 
+The ultimate user-friendly package for manipulating the Kodak DC20
+digital camera.
+
+# --- PREP ---------------------------------------------------
+# The preparation section: Prepare files for making.
+# Use the %setup macro: removes old files, thereafter untars
+# the .tgz file into the build directory.
+# ------------------------------------------------------------
+
+%prep 
+rm -rf $RPM_BUILD_DIR/dc20
+zcat $RPM_SOURCE_DIR/dc20.tgz | tar xvf -
+chown -R root.root $RPM_BUILD_DIR/dc20
+
+# --- BUILD --------------------------------------------------
+# The build section, now compiles, and creates the executables
+# within the build directory.
+# ------------------------------------------------------------
+
+%build
+cd dc20
+make all
+
+# --- INSTALL ------------------------------------------------
+# The install section is used to install the executables to
+# the system. The package itself, should have an 'install'
+# target within the toplevel makefile, which would be executed
+# after the intial cleanup.
+# ------------------------------------------------------------
+
+%install
+cd dc20
+make install
+
+# --- CLEAN --------------------------------------------------
+# Cleans the build directory tree.
+# ------------------------------------------------------------
+
+%clean
+rm -rf $RPM_BUILD_DIR/dc20
+
+# --- FILES --------------------------------------------------
+# Here we define the destination of ALL installed files (You
+# should be able to get these from the Makefile)
+# Hint: Use find. * -print to get a recursive listing of
+# directories
+# ------------------------------------------------------------
+
+%files
+/usr/bin/dc20bin
+/usr/bin/dc20
+/usr/bin/cmttoppm
+/usr/bin/cmt2ppm
+
+%doc dc20/README 
+%doc dc20/TBD

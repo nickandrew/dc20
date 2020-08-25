@@ -1,0 +1,421 @@
+#
+# A Tk frontend to the dc20bin driver for
+# the Kodak DC20 digital camera.
+#
+#\
+exec wish -f "$0"
+
+image create bitmap BThumbnails -foreground black -background white -data "
+#define thumbnail_width 16
+#define thumbnail_height 16
+static unsigned char thumbnail_bits[] = {
+    0xe0, 0x07, 0x18, 0x18, 0xe4, 0x27, 0x1c, 0x38, 0x04, 0x20, 0x04, 0x20,
+    0x0c, 0x30, 0xf4, 0x2f, 0x04, 0x20, 0x04, 0x20, 0xa4, 0x25, 0x04, 0x20,
+    0xa4, 0x25, 0x0c, 0x10, 0x88, 0x11, 0x08, 0x10};
+"
+
+image create bitmap BEraseMem -foreground black -background white -data "
+#define erase_width 16
+#define erase_height 16
+static unsigned char erase_bits[] = {
+   0x00, 0x00, 0x06, 0x60, 0x0e, 0x70, 0x1c, 0x38, 0x38, 0x1c, 0x70, 0x0e,
+   0xe0, 0x07, 0xc0, 0x03, 0xc0, 0x03, 0xe0, 0x07, 0x70, 0x0e, 0x38, 0x1c,
+   0x1c, 0x38, 0x0e, 0x70, 0x06, 0x60, 0x00, 0x00};
+"
+
+image create bitmap BToggleRes -foreground black -background white -data "
+#define toggle_width 16
+#define toggle_height 16
+static unsigned char toggle_bits[] = {
+   0x00, 0x00, 0xf8, 0x1f, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10,
+   0x08, 0x10, 0xf8, 0x1f, 0xf8, 0x1f, 0xf8, 0x1f, 0xf8, 0x1f, 0xf8, 0x1f,
+   0xf8, 0x1f, 0xf8, 0x1f, 0xf8, 0x1f, 0x00, 0x00};
+"
+
+image create bitmap BSnapShot -foreground black -background white -data "
+#define snapshot_width 16
+#define snapshot_height 16
+static unsigned char snapshot_bits[] = {
+   0xfc, 0x1f, 0xe4, 0xe3, 0x14, 0xe4, 0x0f, 0xf8, 0x05, 0x90, 0x03, 0xa0,
+   0x03, 0xa0, 0x03, 0xa0, 0x03, 0xa0, 0x03, 0xa0, 0x05, 0x90, 0x09, 0x88,
+   0x11, 0x84, 0xe1, 0x83, 0xfe, 0x7f, 0x00, 0x00};
+"
+
+#default options
+set options(viewer) "Internal"
+set options(device) "/dev/ttyS0"
+
+proc Ok { msg } {
+    return [tk_dialog .ok "dc20" $msg "" 0 "Ok"]
+}
+
+proc OkAbort { msg } {
+    return [tk_dialog .ok "dc20" $msg "" 1 "Abort" "Ok"]
+}
+
+proc YesNo { msg } {
+    tk_dialog .warning "dc20" $msg "" 0 "No" "Yes"
+}
+
+proc Display { pic } {
+    scan $pic "pic_%d" n
+    set w .dc20view$n
+    if [winfo exists $w] {
+	destroy $w
+    }
+    toplevel $w
+    pack [set f [frame $w.buttons]] -fill x -side top
+    pack [button $f.quit -text Quit -command "destroy $w"] -side left \
+	-padx 4 -pady 2
+    pack [button $f.save -text Save -command "Save $pic"] -side left -padx 4
+    set ppmfile /tmp/dc20.ppm
+    exec djpeg $pic > $ppmfile
+    set im [image create photo -file $ppmfile]
+    pack [label $w.picture -image $im] -side top
+}
+
+proc Save { picture } {
+    set fname [tk_getSaveFile]
+    if { $fname != "" } {
+	file copy -force $picture $fname
+    }
+}
+
+proc CheckBin { } {
+    global binfile
+    set error [catch {exec which $binfile}]
+    return $error
+}
+
+proc FindDevice { } {
+    global binfile options
+    
+    while 1 {
+	foreach dev [list $options(device) "/dev/ttyS0" "/dev/ttyS1" "/dev/ttyS2" "/dev/ttyS3" ] {
+	    Status "Probing $dev for camera"
+	    set fd [open "|$binfile -i $dev"]
+	    if { [gets $fd s] > -1} {
+		if { [string first "Error" $s] == -1 } {
+		    return $dev
+		}
+	    }
+	}
+	if ![OkAbort "Camera not responding. Please check:\n1.Camera attached to serial port.\n2.You have read/write access to it.\n3.It is switched on."] {
+	    exit
+	}
+    }
+}
+
+proc CheckCamera { } {
+    global binfile options
+    
+    Status "Attaching to camera ..."
+    set ok 0
+    while !$ok {
+	set fd [open "|$binfile  -i $options(device)" r]
+	if { [gets $fd s] > -1} {
+	    if { [string first "Error" $s] > -1 } {
+		Status "Camera not found"
+		if ![OkAbort "Camera not responding.\n(switch it on again)"] {
+		    exit
+		}
+	    } else {
+		set ok 1
+	    }
+	} 
+	catch { close $fd }
+	Status ""
+    }
+}
+
+proc GetInfo { } {
+    global binfile options
+
+    set linfo {}
+    set fd [open "|$binfile -i $options(device)" r]
+    while {[gets $fd s] > -1} {
+	lappend linfo $s
+    }
+    catch {close $fd}
+    return  $linfo
+}
+
+proc GetResolution { } {
+    global info
+    
+    return $info(Resolution)
+}
+
+proc CountPictures { } {
+    global info
+
+    set n [lindex [split $info(Pictures) "/"] 0]
+    return $n
+}
+
+proc UpdateInformation { } {
+    global binfile options info
+    CheckCamera
+    foreach item [GetInfo] {
+	switch [lindex $item 0] {
+	    "Resolution" { set info(Resolution) [lindex $item 2] }
+	    "Pictures" { set info(Pictures) [lindex $item 1] }
+	    "Battery" { set info(Battery) [lindex $item 2] }
+	}
+    }
+}
+
+proc CleanDirectory { } {
+    foreach item { thumb_*.pgm pic_*.cmt pic_*.jpg pic_*.ppm } {
+	set l [glob -nocomplain $item]
+	if [llength $l] {
+	    eval "file delete $l"
+	}
+    }
+}
+
+proc GetThumbNail { n } {
+    global binfile options 
+
+    incr n
+    set rc 0
+    set fd [open "|$binfile -t $n $options(device)" r]
+    if { [gets $fd s] > -1 } {
+	if { [string first "Error" $s] == -1 } {
+	    set rc 1
+	} else {
+	    set rc 0
+	}
+    }
+    catch {close $fd}
+
+    return $rc
+}
+
+proc Thumbnails { } {
+    global binfile options info thumb
+    CheckCamera
+    CleanDirectory
+    set w .f.images.win
+    catch {destroy $w}
+    pack [frame $w] -fill both
+
+    for { set row 0 } { $row < 4 } {incr row} {
+	pack [set f [frame $w.$row]] -side top -fill x
+	for { set col 0 } { $col < 4 } {incr col} {
+	    pack [button $f.$col -relief flat -state disabled] -side left
+	    set thumb($row.$col) $f.$col
+	}
+    }
+
+    for { set i 0 } { $i < [CountPictures] } {incr i} {
+	if [GetThumbNail $i] {
+	    SetThumbnail $i
+	    update
+	}
+    }
+
+}
+
+proc SetThumbnail { i } {
+    global thumb
+
+    set n [expr $i + 1]
+    set fname thumb_$n.pgm
+    set im [image create photo -file $fname]
+    set row [expr $i / 4]
+    set col [expr $i % 4]
+
+    $thumb($row.$col) configure -image $im -command "View $n" \
+	-activebackground red -state normal -relief raised
+}
+
+proc DelThumbnails { } {
+    global thumb
+
+    for {set i 0} {$i < 16} {incr i} {
+	set row [expr $i / 4]
+	set col [expr $i % 4]
+	
+	$thumb($row.$col) configure -image "" -command "" \
+	    -state disabled -relief flat
+    }
+}
+
+proc View { item } {
+    global binfile options
+    
+    set snapshot pic_$item.jpg
+    if ![file exists $snapshot] {
+	CheckCamera
+	Status "Get image $item ..."
+	exec $binfile -s $item $options(device) 
+	Status "Converting image $item to $snapshot"
+	set res [GetResolution]
+	if { $res == "high" } {
+	    set xsize 493
+	    set ysize 373
+	    catch {
+		exec cmttoppm pic_$item.cmt | pnmscale -xsize $xsize -ysize $ysize  | cjpeg > $snapshot
+	    }
+	} else {
+	    set xsize 320
+	    set ysize 240
+	    catch {
+		exec cmt2ppm pic_$item.cmt | pnmscale -xsize $xsize -ysize $ysize  | cjpeg > $snapshot
+	    }
+	}
+	Status ""
+    }
+    switch $options(viewer) {
+	"Internal" { Display $snapshot }
+	default { exec $options(viewer) $snapshot & }
+    }
+}
+
+proc EraseMem { } {
+    global binfile options
+
+    if [YesNo "Erasing ALL photographs. Continue?"] {
+	CleanDirectory
+	CheckCamera
+	Status "Erasing ..."
+	catch {exec $binfile -e $options(device)}
+	DelThumbnails
+	after 5000 ;# Wait a bit more
+	UpdateInformation
+	Status ""
+    }
+}
+
+proc ToggleRes { } {
+    global binfile options
+    CheckCamera
+    set npics [lindex [CountPictures] 0]
+    if { $npics != "0" } {
+	Ok "First erase all pictures"
+	return
+    }
+    set res_curr [GetResolution]
+    Status "Toggling ..."
+    catch {exec $binfile -r $options(device)}
+    set res_new [GetResolution]
+    if { $res_new == $res_curr } {
+	Status "Failed to change resolution"
+    } else {
+	Status "Resolution set to $res_new"
+    }
+    UpdateInformation
+}
+
+proc SnapShot { } {
+    global binfile options info
+    CheckCamera
+    Status "Snapping ..."
+    exec $binfile -p $options(device)
+    Status ""
+    UpdateInformation
+    set n [expr [CountPictures] - 1]
+    GetThumbNail $n 
+    SetThumbnail $n
+}
+
+proc Status { msg } {
+    .l configure -text $msg
+    update
+}
+
+proc SaveOptions { args } {
+    global options
+
+    set fd [open ~/.dc20rc w]
+    puts $fd "array set options \{"
+    foreach item [array names options] {
+	puts $fd "$item $options($item)"
+    }
+    puts $fd "\}"
+    close $fd
+}
+
+#
+# Start of program
+#
+if [file exists ~/.dc20rc] {
+    source ~/.dc20rc
+}
+wm withdraw .
+wm deiconify .
+wm geometry . +0+0
+wm title . "dc20 version 1.0"
+set binfile dc20bin
+
+pack [frame .menu -relief raised -bd 1] -fill x 
+pack [frame .toolbar] -fill both -expand y
+set m .menu.file.m
+pack [menubutton .menu.file -text "Operate" -menu $m -underline 0] -side left
+menu $m
+foreach item { {"Get Thumbnails" Thumbnails} {"Erase Memory" EraseMem} \
+		   {"Toggle Resolution" ToggleRes} {"Take Snapshot" SnapShot}} {
+    set cmd [lindex $item 1]
+    $m add command -label [lindex $item 0] -command $cmd
+    set b .toolbar.b$cmd
+    pack [button $b -image B$cmd -bd 1 -activebackground red]\
+	-fill both -side left
+    bind $b <Enter> [list Status [lindex $item 0]]
+    bind $b <Leave> [list Status " "]
+    bind $b <Button1-ButtonRelease> $cmd
+}
+pack [button .toolbar.spacer -bd 1 -state disabled] -fill both
+$m add separator
+$m add command -label "Quit" -command exit
+
+set m .menu.options.m
+pack [menubutton .menu.options -text "Options" -menu $m -underline 0] -side left
+menu $m
+$m add command -label "Viewer"
+foreach item { Internal xv xloadimage gimp ee} {
+    $m add radiobutton -label $item \
+	-value $item -variable options(viewer)
+}
+$m add separator
+$m add command -label "Device"
+foreach item { "/dev/ttyS0" "/dev/ttyS1" "/dev/ttyS2" "/dev/ttyS3" } {
+    $m add radiobutton -label $item \
+	-value $item -variable options(device)
+}
+
+pack [frame .f] -fill both
+pack [set f [frame .f.info -relief raised -bd 1]] -side left -fill both
+foreach item {Resolution Pictures Battery } {
+    pack [set g [frame $f.f$item -relief raised -bd 1]] -fill x -side top
+    pack [label $g.l$item -text $item] -fill x -side left
+    pack [label $g.v$item -textvariable info($item) -bg black -fg green -relief sunken -bd 1 -width 5 -anchor e] -side right -padx 3
+}
+pack [frame $f.spacer -relief raised -bd 1] -fill both -side top -expand y
+
+pack [frame .f.images -relief raised -bd 1] -side top -fill both
+
+# Title Screen
+set about(msg) "\n   DC20 version 1.0\n\n              by\n\n Malcolm Kavalsky\n\n(kavalsky@yahoo.com)\n" 
+pack [set f [frame .f.images.title]] -fill both
+pack [message $f.msg -font "-adobe-times-*-*-*-*-18-*-*-*-*-*-*-*" -text $about(msg)] -side right
+pack [label .l -relief sunken -anchor w] -fill x -pady 2
+update
+
+trace variable options w SaveOptions
+
+# Check installation
+if [CheckBin] {
+    Ok "Sorry, can't find $binfile"
+    exit
+}
+
+CleanDirectory
+
+Ok "Welcome to the dc20.\nPlease switch on camera, and then press OK"
+set options(device) [FindDevice]
+UpdateInformation
+after 3000
+destroy .f.images.title
+Thumbnails
+

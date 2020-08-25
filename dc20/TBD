@@ -1,0 +1,19 @@
+I will NOT be adding any fancy image processing utilities
+to this program, it is not competing with gimp or xv. Instead
+I would rather concentrate on improving the reliability
+and making it as foolproof as possible.
+
+Camera features not yet enabled:
+
+1. When the battery is low, the camera sometimes
+   switches itself off, resulting in errors which
+   are not always caught elegantly. Although, the
+   program does recover.
+
+2. Possibly incorporate the cmttoppm program into
+   the dc20bin driver (maybe also pnmscale, and
+   even cjpeg) to reduce dependencies, and simplify
+   usage. 
+
+
+

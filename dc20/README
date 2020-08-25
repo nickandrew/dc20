@@ -1,0 +1,45 @@
+INTRODUCTION:
+
+	Here is a complete user friendly package for 
+	those who have the Kodak DC20 camera.
+
+	It consists of two programs, a low-level driver for
+	manipulating the camera from the command line and
+	a Tcl/Tk front-end which uses the driver.
+
+	I assume you have a standard Linux installation which
+	contains, Tcl/Tk, the jpeg libraries and pbm utilities.
+
+	You can use the internal viewer, or choose any standard
+	external viewer.
+
+INSTALLATION:
+	
+	1. The binaries are installed to /usr/bin, so ensure
+           you are root before installing.
+
+	2. Enable read write access to the serial port that you
+	   attach your camera to, this should be one of /dev/ttyS0,
+	   through to /dev/ttyS3. These are probed on startup of 
+	   the program.
+
+RUNNING:
+
+	Assuming you have /usr/bin in our path, simply run:
+
+		dc20
+
+THANKS:
+
+	The low-level driver was based on Karl Hakimian's dc20 software,
+	and the conversion program, cmttoppm was written by YOSHIDA
+	Hideki.
+
+	Another useful site is Oliver Hartmann's at: 
+
+		http://home.t-online.de/home/Oliver.Hartmann/dc20secr.htm
+
+Enjoy,
+
+	malcolm@orbotech.co.il
+
