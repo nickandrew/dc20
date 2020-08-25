@@ -16,7 +16,7 @@ unsigned char inp_buff[INP_BUFF_SIZE];
 unsigned char sts_res= 0, sts_bat= 0;
 unsigned char sts_pic_cnt= 0, sts_pic_rem= 0;
 unsigned char dc_type= 0x25;
-unsigned char com_dev[128]= "/dev/ttyS0";
+char com_dev[128]= "/dev/ttyS0";
 
 
 /* LOCAL VARIABLES ****************************************/
