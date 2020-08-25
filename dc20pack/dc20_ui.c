@@ -20,7 +20,7 @@ void show_error(int error)
   switch (error)
   {
     case ERR_DATA_WRONG:   printf("  Wrong data received!"); break;
-    case ERR_NO_DATA:	   printf("  No data received!"); break;
+    case ERR_NO_DATA:      printf("  No data received!"); break;
     case ERR_NO_CAMERA:    printf("  Camera not found!"); break;
     case ERR_PACKET_WRONG: printf("  Wrong data packet received!"); break;
     case ERR_NO_RESPONSE:  printf("  No response from camera!"); break;
@@ -36,9 +36,9 @@ void show_status(int full)
 {
   if (full)
   {
-    printf("\nDC%02X camera with %ld baud at %s detected.", 
+    printf("\nDC%02X camera with %ld baud at %s detected.",
              dc_type,            baud,     com_dev);
- }
+  }
 
   if (sts_res == RES_LOW)
     printf("\nResolution:  low");
@@ -100,32 +100,32 @@ void cmdline(int argc, char *argv[])
       ptr++;
       switch(*ptr)
       {
-        case 'c':  
- 	case 'C': com_nr= atoi(++ptr);
-		  break;
-        case 'b':  
-	case 'B': baud= atol(++ptr);
-		  break;
-        case 'n':  
-	case 'N': max_fcnt= atoi(++ptr);
+        case 'c':
+        case 'C': com_nr= atoi(++ptr);
+                  break;
+        case 'b':
+        case 'B': baud= atol(++ptr);
+                  break;
+        case 'n':
+        case 'N': max_fcnt= atoi(++ptr);
                   if (max_fcnt < 0)
                     max_fcnt= 100;
                   if (max_fcnt < 10)
                     max_fcnt*= 100;
                   break;
-        case 'v':  
-	case 'V': video_mode= atoi(++ptr);
+        case 'v':
+        case 'V': video_mode= atoi(++ptr);
                   if (video_mode <= 0)
                     video_mode= 1;
                   if (video_mode > 999)
                     video_mode= 999;
-		  break;
-        case 'h':  
-	case 'H':
-	case '?': usage();
+                  break;
+        case 'h':
+        case 'H':
+        case '?': usage();
                   program_exit(0);
-		  break;
-	default: break;
+                  break;
+        default: break;
       }
     }
     else
@@ -133,7 +133,7 @@ void cmdline(int argc, char *argv[])
   }
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   int fcnt=0, i, error= 0;
   int first_cnt = -1;
@@ -193,38 +193,38 @@ void main(int argc, char *argv[])
         if (fcnt == 999)
           printf("\nNo free filename found!");
 
-	sprintf(fname, "dc_%03d.dc2", ++fcnt);
-	if((ofp=fopen(fname,"rb")) != NULL)
-	{
-	  fclose(ofp);
-	  printf("  Filename already exists!");
-	  program_exit(1);
-	}
-	if ((ofp= fopen(fname, "wb")) == NULL)
-	{
-	  printf("  Can't open file!");
-	  program_exit(1);
-	}
-	printf("\n");
-
-	if ((error= download_picture(1, ofp)) != 0)
-	  show_error(error);
-	else
-	{
-	  if (!save_no)
-	    save_no= fcnt;
-	  printf("\nPicture %d saved as %s", i, fname);
+        sprintf(fname, "dc_%03d.dc2", ++fcnt);
+        if((ofp=fopen(fname,"rb")) != NULL)
+        {
+          fclose(ofp);
+          printf("  Filename already exists!");
+          program_exit(1);
         }
-	fclose(ofp);
-	if (error)
-	{
+        if ((ofp= fopen(fname, "wb")) == NULL)
+        {
+          printf("  Can't open file!");
+          program_exit(1);
+        }
+        printf("\n");
+
+        if ((error= download_picture(1, ofp)) != 0)
+          show_error(error);
+        else
+        {
+          if (!save_no)
+            save_no= fcnt;
+          printf("\nPicture %d saved as %s", i, fname);
+        }
+        fclose(ofp);
+        if (error)
+        {
           remove(fname);
-	  program_exit(1);
-	}
+          program_exit(1);
+        }
 
         if ((error= erase_dc20_memory()) != 0)
         {
-	  show_error(error);
+          show_error(error);
           program_exit(1);
         }
       }
@@ -257,29 +257,29 @@ void main(int argc, char *argv[])
       case '8':
       case 'D':
       case 'X': for (fcnt= max_fcnt; fcnt>0; fcnt--)
-		{
-		  sprintf(fname, "dc_%03d.dc2", fcnt);
-		  if((ofp=fopen(fname,"rb")) != NULL)
-		  {
+                {
+                  sprintf(fname, "dc_%03d.dc2", fcnt);
+                  if((ofp=fopen(fname,"rb")) != NULL)
+                  {
                     if (first_cnt < 0)
                       first_cnt= fcnt+1;
-		    fclose(ofp);  /* found last used name */
-		    break;
-		  }
-		  sprintf(fname, "dc_%03d.img", fcnt);
-		  if((ofp=fopen(fname,"rb")) != NULL)
-		  {
+                    fclose(ofp);  /* found last used name */
+                    break;
+                  }
+                  sprintf(fname, "dc_%03d.img", fcnt);
+                  if((ofp=fopen(fname,"rb")) != NULL)
+                  {
                     if (first_cnt < 0)
                       first_cnt= fcnt+1;
-		    fclose(ofp);  /* found last used name */
-		    break;
-		  }
-		}
-		if ((error= get_status()) != 0)
-		{
-		  show_error(error);
-		  break;
-		}
+                    fclose(ofp);  /* found last used name */
+                    break;
+                  }
+                }
+                if ((error= get_status()) != 0)
+                {
+                  show_error(error);
+                  break;
+                }
                 dpic= (int) key - 48;
                 if ( (dpic > 0) && (dpic < 9) )
                   i= dpic;
@@ -288,132 +288,132 @@ void main(int argc, char *argv[])
                   i= 1;
                   dpic= 0;
                 }
-		for ( ; i<= sts_pic_cnt; i++)
-		{
-		  sprintf(fname, "dc_%03d.dc2", ++fcnt);
-		  if((ofp=fopen(fname,"rb")) != NULL)
-		  {
-		    fclose(ofp);
-		    printf("  Filename already exists!");
-		    break;
-		  }
-		  if ((ofp= fopen(fname, "wb")) == NULL)
-		  {
-		    printf("  Can't open file!");
-		    break;
-		  }
-		  printf("\n");
-		  if ((error= download_picture(i, ofp)) != 0)
-		    show_error(error);
-		  else
-		  {
-		    if (!save_no)
-		      save_no= fcnt;
-		    printf("\nPicture %d saved as %s", i, fname);
+                for ( ; i<= sts_pic_cnt; i++)
+                {
+                  sprintf(fname, "dc_%03d.dc2", ++fcnt);
+                  if((ofp=fopen(fname,"rb")) != NULL)
+                  {
+                    fclose(ofp);
+                    printf("  Filename already exists!");
+                    break;
                   }
-		  fclose(ofp);
-		  if (error)
-		  {
+                  if ((ofp= fopen(fname, "wb")) == NULL)
+                  {
+                    printf("  Can't open file!");
+                    break;
+                  }
+                  printf("\n");
+                  if ((error= download_picture(i, ofp)) != 0)
+                    show_error(error);
+                  else
+                  {
+                    if (!save_no)
+                      save_no= fcnt;
+                    printf("\nPicture %d saved as %s", i, fname);
+                  }
+                  fclose(ofp);
+                  if (error)
+                  {
                     remove(fname);
-		    break;
-		  }
+                    break;
+                  }
                   if (dpic)
                     break;
-		}
-		if (key == 'X')
+                }
+                if (key == 'X')
                 {
 #if FULL_FEATURED
                   if (first_cnt > 0)
                   {
-		    if((ofp=fopen("dc2tga.cmd","wt")) != NULL)
+                    if((ofp=fopen("dc2tga.cmd","wt")) != NULL)
                     {
                       fprintf(ofp, "-x%d -a\n", first_cnt);
                       fclose(ofp);
                     }
                   }
-		  program_exit(0);   /* Quit */
+                  program_exit(0);   /* Quit */
 #else
                   printf("\nNot available in this evaluation copy!");
 #endif
                 }
-		break;
+                break;
       case 'Q': program_exit(0);   /* Quit */
-		break;
+                break;
       case 'E': if ((error= erase_dc20_memory()) != 0)
-		  show_error(error);
-		else
-		  show_status(0);
-		break;
+                  show_error(error);
+                else
+                  show_status(0);
+                break;
       case 'P': if ((error= take_picture()) != 0)
-		  show_error(error);
-		else
-		  show_status(0);
-		break;
+                  show_error(error);
+                else
+                  show_status(0);
+                break;
       case 'R': if ((error= toggle_resolution()) != 0)
-		   show_error(error);
-  		 else
-		   show_status(0);
-		break;
+                   show_error(error);
+                 else
+                   show_status(0);
+                break;
       case 'S': if ((error= get_status()) != 0)
                 {
-		  show_error(error);
+                  show_error(error);
                   break;
-		}
+                }
                 else
-		  show_status(1);
+                  show_status(1);
 
-		if ((error= load_image_infos(img_inf)) != 0)
-		  show_error(error);
-		else
-		  for (i= 1; i<= sts_pic_cnt; i++)
-		  {
-		    int s;
-		    char f[8];
+                if ((error= load_image_infos(img_inf)) != 0)
+                  show_error(error);
+                else
+                  for (i= 1; i<= sts_pic_cnt; i++)
+                  {
+                    int s;
+                    char f[8];
 
                     if (i > MAX_PICT)
                       break;
 
-		    if (img_inf[i][0] < 7)
-		      strcpy(f, "f/4 ");
-		    else
-		      strcpy(f, "f/11");
-		    if (img_inf[i][3] < 18)
-		      s= 30;
-		    else if (img_inf[i][3] < 26)
-		      s= 60;
-		    else if (img_inf[i][3] < 33)
-		      s= 125;
-		    else if (img_inf[i][3] < 40)
-		      s= 250;
-		    else if (img_inf[i][3] < 48)
-		      s= 500;
-		    else if (img_inf[i][3] < 56)
-		      s= 1000;
-		    else if (img_inf[i][3] < 62)
-		      s= 2000;
-		    else if (img_inf[i][3] < 67)
-		      s= 4000;
-		    else
-		      s= 8000;
-		    printf("\nPicture %2d: %s 1/%d", i, f, s);
+                    if (img_inf[i][0] < 7)
+                      strcpy(f, "f/4 ");
+                    else
+                      strcpy(f, "f/11");
+                    if (img_inf[i][3] < 18)
+                      s= 30;
+                    else if (img_inf[i][3] < 26)
+                      s= 60;
+                    else if (img_inf[i][3] < 33)
+                      s= 125;
+                    else if (img_inf[i][3] < 40)
+                      s= 250;
+                    else if (img_inf[i][3] < 48)
+                      s= 500;
+                    else if (img_inf[i][3] < 56)
+                      s= 1000;
+                    else if (img_inf[i][3] < 62)
+                      s= 2000;
+                    else if (img_inf[i][3] < 67)
+                      s= 4000;
+                    else
+                      s= 8000;
+                    printf("\nPicture %2d: %s 1/%d", i, f, s);
                     if (img_inf[i][4] == 0)
                       printf(" (high res)");
                     else
                       printf(" (low res)");
-		  }
-		break;
+                  }
+                break;
       case 'T': if ((ofp= fopen("thumbnls.dc2", "wb")) == NULL)
-		{
-		  printf("  Can't open file!");
-		  break;
-		}
+                {
+                  printf("  Can't open file!");
+                  break;
+                }
                 printf("\n");
-		if ((error= load_thumbnails(ofp)) != 0)
-		  show_error(error);
-		else
-		  printf("\nAll thumbnails saved in thumbnls.dc2");
-		fclose(ofp);
-		break;
+                if ((error= load_thumbnails(ofp)) != 0)
+                  show_error(error);
+                else
+                  printf("\nAll thumbnails saved in thumbnls.dc2");
+                fclose(ofp);
+                break;
       case 0xA: printf("\n: ");
                 break;
       case 0x0:

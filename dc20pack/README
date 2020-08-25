@@ -19,10 +19,10 @@ Be sure you have access to the serial devices:
 /dev/ttyS2 for COM3
 /dev/ttyS3 for COM4
 
-Now switch on your camera and run dc20dump. 
+Now switch on your camera and run dc20dump.
 
 How it works:
-dc20term stores all pictures as raw data files (dc_NNN.dc2) and generates 
+dc20term stores all pictures as raw data files (dc_NNN.dc2) and generates
 the file dc2tga.cmd. Now dc2totga knows what to do: It converts the dc_NNN.dc2
 files to dc_NNN.tga files.
 

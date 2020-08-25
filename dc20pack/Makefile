@@ -1,5 +1,7 @@
 all: dc20term dc2totga
  
+CFLAGS=-Wall
+
 dc20term: dc20_ui.o dc20_hif.o
 	gcc -o $@ dc20_ui.o dc20_hif.o
 

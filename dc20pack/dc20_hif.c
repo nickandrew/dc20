@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include "dc20_hif.h"
 
 #define  Kb  1024
@@ -15,7 +16,7 @@ unsigned char inp_buff[INP_BUFF_SIZE];
 unsigned char sts_res= 0, sts_bat= 0;
 unsigned char sts_pic_cnt= 0, sts_pic_rem= 0;
 unsigned char dc_type= 0x25;
-unsigned char com_dev[128]= "/dev/ttyS0";
+char com_dev[128]= "/dev/ttyS0";
 
 
 /* LOCAL VARIABLES ****************************************/
@@ -36,7 +37,7 @@ unsigned char cmd_hires[] = { 8, 0x71, 0, 0, 0, 0, 0, 0, 0x1A };
 
 /* LOCAL FUNCTIONS *****************************************/
 
-void pause(int millisec)
+void my_pause(int millisec)
 {
 
   long wait, goal;
@@ -77,13 +78,13 @@ int read_from_com(int nof_bytes)
   {
     chksum= 0;
 
-    /* i= read(com_hdl, inp_buff, nof_bytes); */ 
+    /* i= read(com_hdl, inp_buff, nof_bytes); */
     for (i= 0; i< nof_bytes; )
     {
       if ((k= read(com_hdl, &inp_buff[i], nof_bytes-i)) < 1)
         break;
       i+= k;
-    }    
+    }
 
     if (i == nof_bytes)
     {
@@ -92,7 +93,7 @@ int read_from_com(int nof_bytes)
         chksum^= inp_buff[i];
 
       if ( chksum == 0 )
-	return nof_bytes;
+        return nof_bytes;
       else
         i= nof_bytes - 1;
     }
@@ -112,18 +113,18 @@ void set_com_baud(long baud)
 
   switch (baud)
   {
-    case  9600 : com_speed= B9600; break; 
+    case  9600 : com_speed= B9600; break;
     case  19200: com_speed= B19200; break;
     case  38400: com_speed= B38400; break;
     case  57600: com_speed= B57600; break;
     case 115200: com_speed= B115200; break;
-    default:     com_speed= B9600; baud= 9600; 
+    default:     com_speed= B9600; baud= 9600;
   }
 
   cfsetospeed(&tty_param, com_speed);
   cfsetispeed(&tty_param, com_speed);
 
-  if (tcsetattr(com_hdl, TCSANOW, &tty_param) == -1) 
+  if (tcsetattr(com_hdl, TCSANOW, &tty_param) == -1)
   {
     perror("tcsetattr");
   }
@@ -153,7 +154,7 @@ void initcom(int com_nr, long baud)
     default: strcpy(com_dev, "/dev/ttyS0") ; break;
   }
 
-  if ((com_hdl = open(com_dev, O_RDWR)) == -1) 
+  if ((com_hdl = open(com_dev, O_RDWR)) == -1)
   {
     perror("open");
     fprintf(stderr, "Could not open %s for read/write.\n", com_dev);
@@ -170,8 +171,8 @@ void initcom(int com_nr, long baud)
   cfsetispeed(&tty_param, B9600);
 
   tcgetattr(com_hdl, &old_tty);
-  
-  if (tcsetattr(com_hdl, TCSANOW, &tty_param) == -1) 
+
+  if (tcsetattr(com_hdl, TCSANOW, &tty_param) == -1)
   {
     perror("tcsetattr");
     fprintf(stderr, "Could not init %s for camera access.\n", com_dev);
@@ -197,7 +198,7 @@ int send_cmd(unsigned char *cmd)
 {
   int i, error= 0;
 
-  pause(100);
+  my_pause(100);
 
   for (i=1; i<=cmd[0]; i++)
   {
@@ -239,7 +240,7 @@ int init_dc20(int com_nr, long baud)
 
   set_com_baud(baud);
 
-  wait= 3; 
+  wait= 3;
   while ( (error=(send_cmd(cmd_init)))!=0 && --wait) ;
 
   return error;
@@ -249,7 +250,7 @@ int init_dc20(int com_nr, long baud)
 void close_dc20(void)
 {
   /* reset to 9600Baud */
-  cmd_init[3]= 0x96; 
+  cmd_init[3]= 0x96;
   cmd_init[4]= 0x00;
   send_cmd(cmd_init);
 
@@ -260,7 +261,7 @@ void close_dc20(void)
 int get_status(void)
 {
   int wait= 10;
-  int error=0, dmy;
+  int error=0;
 
   while ( (error=(send_cmd(cmd_init)))!=0 && --wait) ;
 
@@ -275,7 +276,7 @@ int get_status(void)
   if (read_from_com( 257) != 257)
   {
     return ERR_PACKET_WRONG;
-  }  
+  }
 
   cxmit(0xD2);
 
@@ -322,7 +323,7 @@ int take_picture(void)
     rcv=crcv(&error);
     if (error)
       break;
-  } 
+  }
 
   /* now photo is taken */
 
@@ -330,7 +331,7 @@ int take_picture(void)
   error= 0;
   while ( ((rcv=crcv(&error)) != 0) && wait-- )
     error= 0;
-  
+
   if ( (rcv != 0) || error )
   {
     return ERR_NO_RESPONSE;
@@ -402,7 +403,7 @@ int toggle_resolution(void)
     crcv(&error);
     if (error)
       break;
-  } 
+  }
 
   if ((error= get_status())!=0)
     return error;
@@ -439,7 +440,7 @@ int load_thumbnails(FILE *ofp)
         return ERR_DATA_SAVE;
 
       if (blk%2 == 0)
-      { 
+      {
         printf(".");
         fflush(stdout);
       }
@@ -489,11 +490,11 @@ int download_picture(int pic_no, FILE *ofp)
       return ERR_DATA_SAVE;
 
     if (blk%2 == 0)
-    { 
+    {
       printf(".");
       fflush(stdout);
     }
-    
+
     cxmit(0xD2);
   }
 

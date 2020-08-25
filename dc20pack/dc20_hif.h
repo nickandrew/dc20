@@ -21,7 +21,7 @@
 extern unsigned char inp_buff[INP_BUFF_SIZE];
 extern unsigned char sts_res, sts_bat, sts_pic_cnt, sts_pic_rem;
 extern unsigned char dc_type;
-extern unsigned char com_dev[];
+extern char com_dev[];
 
 /* GLOBAL FUNCTIONS ****************************************/
 extern int send_cmd(unsigned char *cmd);
