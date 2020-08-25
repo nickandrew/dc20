@@ -14,10 +14,10 @@
 #include <math.h>
 #include <sys/types.h>
 #include <time.h>
+#include <ctype.h>
 
 #ifdef BC
 /* Borland C */
-#include <ctype.h>
 #include <conio.h>
 #endif
 

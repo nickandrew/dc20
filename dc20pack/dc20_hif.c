@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include "dc20_hif.h"
 
 #define  Kb  1024
@@ -36,7 +37,7 @@ unsigned char cmd_hires[] = { 8, 0x71, 0, 0, 0, 0, 0, 0, 0x1A };
 
 /* LOCAL FUNCTIONS *****************************************/
 
-void pause(int millisec)
+void my_pause(int millisec)
 {
 
   long wait, goal;
@@ -197,7 +198,7 @@ int send_cmd(unsigned char *cmd)
 {
   int i, error= 0;
 
-  pause(100);
+  my_pause(100);
 
   for (i=1; i<=cmd[0]; i++)
   {
