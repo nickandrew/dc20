@@ -113,36 +113,36 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
 
       for (line= 0; line < 60; line++)
       {
-	fread(ccd[line], 1, 80, infd);
-	for (column= 0; column< 80; column++)
-	  if (ccd[line][column] > thmb_max)
-	    thmb_max= ccd[line][column];
+        fread(ccd[line], 1, 80, infd);
+        for (column= 0; column< 80; column++)
+          if (ccd[line][column] > thmb_max)
+            thmb_max= ccd[line][column];
       }
 
       for (line= 0; line < 60; line++)
       {
-	for (column= 0; column< 80; column++)
-	{
-	  UINT16 thmb_dat;
-	  thmb_dat= ((UINT16) ccd[line][column] * 255) / thmb_max;
-	  thmb_dat= 255 - thmb_dat;
-	  thmb_dat= (thmb_dat*thmb_dat) / 255;
-	  thmb_dat= 255 - thmb_dat;
+        for (column= 0; column< 80; column++)
+        {
+          UINT16 thmb_dat;
+          thmb_dat= ((UINT16) ccd[line][column] * 255) / thmb_max;
+          thmb_dat= 255 - thmb_dat;
+          thmb_dat= (thmb_dat*thmb_dat) / 255;
+          thmb_dat= 255 - thmb_dat;
 
-	  putc(thmb_dat, outfp);
-	  putc(thmb_dat, outfp);
-	  putc(thmb_dat, outfp);
-	}
+          putc(thmb_dat, outfp);
+          putc(thmb_dat, outfp);
+          putc(thmb_dat, outfp);
+        }
       }
 
       for (; line < 64; line++)
       {
-	for (column= 0; column< 80; column++)
-	{
-	  putc(0, outfp);
-	  putc(0, outfp);
-	  putc(0, outfp);
-	}
+        for (column= 0; column< 80; column++)
+        {
+          putc(0, outfp);
+          putc(0, outfp);
+          putc(0, outfp);
+        }
       }
     }
     return (20);
@@ -159,9 +159,9 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
     {
       for (column= 0; column< COLUMNS; column+=4)
       {
-	fread(&ccd[line][column], 1, 2, infd);
-	ccd[line][column+2]= ccd[line][column];
-	ccd[line][column+3]= ccd[line][column+1];
+        fread(&ccd[line][column], 1, 2, infd);
+        ccd[line][column+2]= ccd[line][column];
+        ccd[line][column+3]= ccd[line][column+1];
       }
       ccd[line][2]= ccd[line][6];
       ccd[line][3]= ccd[line][7];
@@ -171,13 +171,13 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
       ccd[line][COLUMNS-RIGHT_MARGIN+2]= ccd[line][COLUMNS-RIGHT_MARGIN-2];
       for (column= 4; column< COLUMNS-3; column+=4)
       {
-	ccd[line][column]= (ccd[line][column-2]+ccd[line][column+2])/2;
-	ccd[line][column+1]= (ccd[line][column-1]+ccd[line][column+3])/2;
+        ccd[line][column]= (ccd[line][column-2]+ccd[line][column+2])/2;
+        ccd[line][column+1]= (ccd[line][column-1]+ccd[line][column+3])/2;
       }
 
       for (column= 0; column< COLUMNS; column++)
-	if (ccd[line][column] < 2)
-	  ccd[line][column]= 2;
+        if (ccd[line][column] < 2)
+          ccd[line][column]= 2;
     }
 #else
     printf("\nLow res files not supported in this evaluation copy!\n");
@@ -200,8 +200,8 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
       fread(ccd[line], 1, COLUMNS, infd);
 
       for (column= 0; column< COLUMNS; column++)
-	if (ccd[line][column] < 2)
-	  ccd[line][column]= 2;
+        if (ccd[line][column] < 2)
+          ccd[line][column]= 2;
     }
   }
 
@@ -209,7 +209,7 @@ int read_dc2_file(FILE *infd, FILE *outfp, UINT8 *ccd[LINES])
 }
 
 void set_initial_interpolation(UINT8 *ccd[LINES],
-			       short *horiz_ipol[LINES])
+                               short *horiz_ipol[LINES])
 {
   int column, line;
   for (line = 0; line < LINES; line++)
@@ -232,11 +232,11 @@ void ipol_horizontally(UINT8 *ccd[LINES], short *horiz_ipol[LINES])
     {
       for (init_col= LEFT_MARGIN+1; init_col <= LEFT_MARGIN+2; init_col++)
       {
-	for (column = init_col; column < COLUMNS-RIGHT_MARGIN-1; column+= 2)
-	{
+        for (column = init_col; column < COLUMNS-RIGHT_MARGIN-1; column+= 2)
+        {
            horiz_ipol[line][column] = (short)
                      (((float)ccd[line][column - 1] / horiz_ipol[line][column - 1] +
-		       (float)ccd[line][column + 1] / horiz_ipol[line][column + 1]) *
+                       (float)ccd[line][column + 1] / horiz_ipol[line][column + 1]) *
                               ccd[line][column] * (SCALE * SCALE / 2) + 0.5f);
         }
       }
@@ -263,7 +263,7 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
       long this_vert_ipol;
       if (line == TOP_MARGIN)
       {
-	this_vert_ipol = (long) ((float)down_ccd / down_intensity * this_intensity + 0.5f);
+        this_vert_ipol = (long) ((float)down_ccd / down_intensity * this_intensity + 0.5f);
       }
       else
         if (line == LINES - BOTTOM_MARGIN - 1)
@@ -271,9 +271,9 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
           this_vert_ipol= (long)((float)up_ccd / up_intensity * this_intensity + 0.5f);
         }
         else
-	{
-	  this_vert_ipol= (long)(((float)up_ccd/up_intensity + (float)down_ccd/down_intensity) *
-			    this_intensity / 2.0f + 0.5f);
+        {
+          this_vert_ipol= (long)(((float)up_ccd/up_intensity + (float)down_ccd/down_intensity) *
+                            this_intensity / 2.0f + 0.5f);
         }
       if (line & 1)
       {
@@ -283,7 +283,7 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
           g2b = this_horiz_ipol;
           rg2 = this_vert_ipol;
           r = (2 * (r2gb - g2b) + rg2) / 5;
-	  g = (rg2 - r) / 2;
+          g = (rg2 - r) / 2;
           b = g2b - 2 * g;
         }
         else
@@ -291,9 +291,9 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
           g2b = this_ccd;
           r2gb = this_horiz_ipol;
           rgb2 = this_vert_ipol;
-	  r = (3 * r2gb - g2b - rgb2) / 5;
-	  g = 2 * r - r2gb + g2b;
-	  b = g2b - 2 * g;
+          r = (3 * r2gb - g2b - rgb2) / 5;
+          g = 2 * r - r2gb + g2b;
+          b = g2b - 2 * g;
         }
       }
       else
@@ -303,7 +303,7 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
           rg2 = this_ccd;
           rgb2 = this_horiz_ipol;
           r2gb = this_vert_ipol;
-	  b = (3 * rgb2 - r2gb - rg2) / 5;
+          b = (3 * rgb2 - r2gb - rg2) / 5;
           g = (rgb2 - r2gb + rg2 - b) / 2;
           r = rg2 - 2 * g;
         }
@@ -311,9 +311,9 @@ void ipol_vertically(UINT8 *ccd[LINES], short *horiz_ipol[LINES],
         {
           rgb2 = this_ccd;
           rg2 = this_horiz_ipol;
-	  g2b = this_vert_ipol;
-	  b = (g2b - 2 * (rg2 - rgb2)) / 5;
-	  g = (g2b - b) / 2;
+          g2b = this_vert_ipol;
+          b = (g2b - 2 * (rg2 - rgb2)) / 5;
+          g = (g2b - b) / 2;
           r = rg2 - 2 * g;
         }
       }
@@ -351,19 +351,19 @@ void adjust_color_and_saturation(short *red[LINES], short *green[LINES], short *
         if (r > g)
         {
           if (r > b)
-	  {
-	    max = &r;
-	    if (g > b)
+          {
+            max = &r;
+            if (g > b)
             {
               min = &b;
-	      mid = &g;
+              mid = &g;
             }
             else
             {
               min = &g;
               mid = &b;
             }
-	  }
+          }
           else
           {
             min = &g;
@@ -371,19 +371,19 @@ void adjust_color_and_saturation(short *red[LINES], short *green[LINES], short *
             max = &b;
           }
         }
-	else
-	{
-	  if (g > b)
+        else
+        {
+          if (g > b)
           {
             max = &g;
-	    if (r > b)
+            if (r > b)
             {
               min = &b;
               mid = &r;
             }
             else
             {
-	      min = &r;
+              min = &r;
               mid = &b;
             }
           }
@@ -391,12 +391,12 @@ void adjust_color_and_saturation(short *red[LINES], short *green[LINES], short *
           {
             min = &r;
             mid = &g;
-	    max = &b;
-	  }
-	}
+            max = &b;
+          }
+        }
         *mid = *min + sqr_saturation * (*mid - *min);
         *max = *min + saturation * (*max - *min);
-	new_intensity = r * RINTENSITY + g * GINTENSITY + b * BINTENSITY;
+        new_intensity = r * RINTENSITY + g * GINTENSITY + b * BINTENSITY;
         r *= intensity / new_intensity;
         g *= intensity / new_intensity;
         b *= intensity / new_intensity;
@@ -536,7 +536,7 @@ int lookup_gamma_table(int i, long low_i, long high_i,
 
 void stretch(short *red[RES_LINES], short *green[RES_LINES],
              short *blue[RES_LINES], long low_i, long high_i,
-	     UINT8 *ccd[LINES])
+             UINT8 *ccd[LINES])
 {
 #if DEBUG
   int  r_min= 255, g_min= 255, b_min= 255;
@@ -556,7 +556,7 @@ void stretch(short *red[RES_LINES], short *green[RES_LINES],
 
       if (ccd[line][column] >= max_ccd_val)
         if ( ccd[line][column-1] >= max_ccd_val ||
-	     ccd[line][column+1] >= max_ccd_val ||
+             ccd[line][column+1] >= max_ccd_val ||
              ccd[line-1][column] >= max_ccd_val ||
              ccd[line+1][column] >= max_ccd_val )
         {
@@ -594,15 +594,15 @@ void stretch(short *red[RES_LINES], short *green[RES_LINES],
     UINT16 ufakt;
     UINT16 ofakt;
 
-    by=fy*line;                                 
-    ey=fy*(line+1);                             
+    by=fy*line;
+    ey=fy*(line+1);
 
-    byab=(int)by;                               
-    eyab=(int)ey;                               
-    if ((float)eyab==ey) eyab--;                
+    byab=(int)by;
+    eyab=(int)ey;
+    if ((float)eyab==ey) eyab--;
 
-    teilzeile = eyab/fy;                        
-    ufakt = (UINT16) ((teilzeile-line)*256);    
+    teilzeile = eyab/fy;
+    ufakt = (UINT16) ((teilzeile-line)*256);
     ofakt = (UINT16) ((line+1-teilzeile)*256);
 
     for (column=LEFT_MARGIN; column< COLUMNS-RIGHT_MARGIN; column++)
@@ -613,17 +613,17 @@ void stretch(short *red[RES_LINES], short *green[RES_LINES],
 
       if(byab!=eyab)
       {
-	for (i=eyab; i>=byab; i--)
+        for (i=eyab; i>=byab; i--)
         {
           UINT16 sum_blau  = blue[i][column];
-	  UINT16 sum_gruen = green[i][column];
+          UINT16 sum_gruen = green[i][column];
           UINT16 sum_rot   = red[i][column];
 
           if(i==byab)
           {
             sum_blau  *= ufakt;
             sum_gruen *= ufakt;
-	    sum_rot   *= ufakt;
+            sum_rot   *= ufakt;
           }
           else
           {
@@ -631,19 +631,19 @@ void stretch(short *red[RES_LINES], short *green[RES_LINES],
             sum_gruen *= ofakt;
             sum_rot   *= ofakt;
           }
-	  erg_blau += sum_blau;
-	  erg_gruen+= sum_gruen;
-	  erg_rot  += sum_rot;
+          erg_blau += sum_blau;
+          erg_gruen+= sum_gruen;
+          erg_rot  += sum_rot;
         }
         blue [line][column]= (short) (erg_blau/256);
-	green[line][column]= (short) (erg_gruen/256);
+        green[line][column]= (short) (erg_gruen/256);
         red  [line][column]= (short) (erg_rot/256);
       }
       else
       {
         blue [line][column]= blue [byab][column];
         green[line][column]= green[byab][column];
-	red  [line][column]= red  [byab][column];
+        red  [line][column]= red  [byab][column];
       }
     }      /* Ende Spalte Zielbild */
   }        /* Ende Zeile  Zielbild */
@@ -696,14 +696,14 @@ void sharpen(short *red[RES_LINES], short *green[RES_LINES], short *blue[RES_LIN
                           red[l  ][j-1]               - red[l  ][j+1] -
                           red[l+1][j-1] - red[l+1][j] - red[l+1][j+1];
       g= green[l][j]* f11 - green[l-1][j-1] - green[l-1][j] - green[l-1][j+1] -
-			    green[l  ][j-1]                 - green[l  ][j+1] -
+                            green[l  ][j-1]                 - green[l  ][j+1] -
                             green[l+1][j-1] - green[l+1][j] - green[l+1][j+1];
       b= blue[l][j]* f11 - blue[l-1][j-1] - blue[l-1][j] - blue[l-1][j+1] -
                            blue[l  ][j-1]                - blue[l  ][j+1] -
                            blue[l+1][j-1] - blue[l+1][j] - blue[l+1][j+1];
       if (fakt > 1)
       {
-	r/= fakt;
+        r/= fakt;
         g/= fakt;
         b/= fakt;
       }
@@ -733,7 +733,7 @@ static struct
   };
 
 void output_rgb(short *red[RES_LINES], short *green[RES_LINES],
-		short *blue[RES_LINES], FILE *outfp)
+                short *blue[RES_LINES], FILE *outfp)
 {
   int column, line;
 
@@ -762,7 +762,7 @@ int event(void)
     if ( (getch()) == 0x1B )
     {
       while (kbhit())
-	getch();
+        getch();
       return (1);
     }
 #endif
@@ -770,8 +770,8 @@ int event(void)
 }
 
 int dc2totga(FILE *infp, FILE *outfp,
-	     UINT8 *ccd[RES_LINES], short *horiz_ipol[RES_LINES],
-	     short *red[RES_LINES], short *green[RES_LINES], short *blue[RES_LINES])
+             UINT8 *ccd[RES_LINES], short *horiz_ipol[RES_LINES],
+             short *red[RES_LINES], short *green[RES_LINES], short *blue[RES_LINES])
 {
   /* clock_t t1= clock(); */
   int err;
@@ -865,10 +865,10 @@ void cmdline(int argc, char *argv[], int exit_flag)
         case 'B': bfactor= (float) atof(++ptr);
                   break;
         case 'C': max_ccd_val= (UINT8) atof(++ptr);
-		  break;
+                  break;
         case 'G': gfactor= (float) atof(++ptr);
-		  break;
-	case 'N': norm_percentage= (float) atof(++ptr);
+                  break;
+        case 'N': norm_percentage= (float) atof(++ptr);
                   break;
         case 'O': opt_lev= (int) atof(++ptr);
                   break;
@@ -876,8 +876,8 @@ void cmdline(int argc, char *argv[], int exit_flag)
                   break;
         case 'S': saturation= (float) atof(++ptr);
                   break;
-	case 'V': gamma_value= (float) atof(++ptr);
-		  break;
+        case 'V': gamma_value= (float) atof(++ptr);
+                  break;
         case 'X': fcnt= (int) atof(++ptr);
                   sprintf(filename, "dc_%03d.dc2", fcnt);
                   break;
@@ -885,10 +885,10 @@ void cmdline(int argc, char *argv[], int exit_flag)
         case '?': help();
                   if (exit_flag)
                     exit(0);
-		  break;
+                  break;
         default:  if ( *ptr >= 0x30 && *ptr <= 0x39 )
-		  {
-		    fcnt= (int) atof(ptr);
+                  {
+                    fcnt= (int) atof(ptr);
                     sprintf(filename, "dc_%03d", fcnt);
                   }
                   break;
@@ -941,9 +941,9 @@ void show_params(void)
 {
   printf("\n");
   printf("red factor= %4.2f, green factor= %4.2f, blue factor = %4.2f\n",
-	 rfactor, gfactor, bfactor);
+         rfactor, gfactor, bfactor);
   printf("saturation= %4.2f, gamma_value = %4.2f, norm_percent= %.2f",
-	 saturation, gamma_value, norm_percentage);
+         saturation, gamma_value, norm_percentage);
   printf(", opt_lev= %d", opt_lev);
   printf("\n");
 }
@@ -990,16 +990,16 @@ void main(int argc, char *argv[])
   if (!all_files)
   {
     if ( (strstr(infn, ".dc2") == NULL) &&
-	 (strstr(infn, ".DC2") == NULL) &&
-	 (strstr(infn, ".img") == NULL) &&
-	 (strstr(infn, ".IMG") == NULL) &&
-	 (strstr(infn, ".cmt") == NULL) &&
-	 (strstr(infn, ".CMT") == NULL) )
+         (strstr(infn, ".DC2") == NULL) &&
+         (strstr(infn, ".img") == NULL) &&
+         (strstr(infn, ".IMG") == NULL) &&
+         (strstr(infn, ".cmt") == NULL) &&
+         (strstr(infn, ".CMT") == NULL) )
       strcat(infn, ".dc2");
     if ((infp = fopen(infn, "rb")) == NULL)
     {
       fprintf(stderr, "Can't open: %s\n",infn);
-	exit(1);
+        exit(1);
     }
     fclose(infp);
   }
@@ -1038,42 +1038,42 @@ void main(int argc, char *argv[])
     if (all_files)
       for (; fcnt<=999; fcnt++)
       {
-	sprintf(infn, "dc_%03d.dc2", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
-	sprintf(infn, "DC_%03d.DC2", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
-	sprintf(infn, "dc_%03d.img", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
-	sprintf(infn, "DC_%03d.IMG", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
-	sprintf(infn, "dc_%03d.cmt", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
-	sprintf(infn, "DC_%03d.CMT", fcnt);
-	if((infp=fopen(infn,"rb")) != NULL)
-	{
-	  fclose(infp);
-	  break;
-	}
+        sprintf(infn, "dc_%03d.dc2", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
+        sprintf(infn, "DC_%03d.DC2", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
+        sprintf(infn, "dc_%03d.img", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
+        sprintf(infn, "DC_%03d.IMG", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
+        sprintf(infn, "dc_%03d.cmt", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
+        sprintf(infn, "DC_%03d.CMT", fcnt);
+        if((infp=fopen(infn,"rb")) != NULL)
+        {
+          fclose(infp);
+          break;
+        }
       }
 
     if ((infp = fopen(infn, "rb")) == NULL)
@@ -1096,15 +1096,15 @@ void main(int argc, char *argv[])
     if ((outfp = fopen(outfn, "w+b")) == NULL)
     {
       fprintf(stderr, "Can't open: %s\n",outfn);
-	break;
+        break;
     }
 
     if ( (err= dc2totga(infp, outfp, ccd, horiz_ipol, red, green, blue)) > 0 )
     {
       if (err < 10)
       {
-	printf("\n\nAborted!");
-	break;
+        printf("\n\nAborted!");
+        break;
       }
     }
 
@@ -1114,7 +1114,7 @@ void main(int argc, char *argv[])
 
     if (!all_files)
       break;
-      
+
     fcnt++;
   }
 
