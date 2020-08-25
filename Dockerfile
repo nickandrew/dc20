@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER Nick Andrew <nick@nick-andrew.net>
 
 RUN apt-get update
