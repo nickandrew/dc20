@@ -133,7 +133,7 @@ void cmdline(int argc, char *argv[])
   }
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   int fcnt=0, i, error= 0;
   int first_cnt = -1;
