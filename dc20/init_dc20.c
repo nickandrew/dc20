@@ -12,9 +12,7 @@ static unsigned char init_pck[] =
 
 static struct termios tty_orig;
 
-init_dc20(device, speed)
-char *device;
-speed_t speed;
+int init_dc20(char *device, speed_t speed)
 {
 	struct termios tty_new;
 	int tfd;
@@ -97,9 +95,7 @@ speed_t speed;
 	return(tfd);
 }
 
-void
-close_dc20(fd)
-int fd;
+void close_dc20(int fd)
 {
   /*
     Set camera back to 9600 baud rate

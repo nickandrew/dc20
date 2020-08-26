@@ -1,3 +1,5 @@
+#include <termios.h>
+
 typedef struct dc20_info_s {
   unsigned char model;
   unsigned char ver_major;
@@ -12,4 +14,9 @@ typedef struct dc20_info_s {
 
 Dc20Info *get_info(int);
 
+// File init_dc20.c
+extern void close_dc20(int fd);
+extern int init_dc20(char *device, speed_t speed);
+
+// File send_pck.c
 extern int send_pck(int fd, unsigned char *pck);
