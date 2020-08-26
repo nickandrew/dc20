@@ -6,9 +6,6 @@
 
 #include "dc20.h"
 
-static unsigned char init_pck[] =
-	{0x41, 0x00, 0x11, 0x52, 0x00, 0x00, 0x00, 0x1A};
-
 #define USAGE "Usage: dc20bin [-i] [-e] [-a] [-p] [-s #] device \n\n\
 \t -a        : Get all snapshots\n\
 \t -e        : Erase memory\n\
@@ -21,13 +18,8 @@ static unsigned char init_pck[] =
 
 int main(int argc, char *argv[] )
 {
-  int do_info = 0;
-  int do_snaps = 0;
-  int do_thumbs = 0;
   int i, n;
   int tfd;
-  struct termios tty_orig;
-  struct termios tty_new;
   Dc20InfoPtr dc20_info;
   
   if ( argc < 2 || strcmp(argv[1],"--help") == 0 ) {
