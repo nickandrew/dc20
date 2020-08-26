@@ -28,6 +28,9 @@ extern int send_pck(int fd, unsigned char *pck);
 extern int pic_to_file(int tfd, int n, int low_res);
 extern void pics_to_file(int tfd, int n, int low_res);
 
+// File snapshot.c
+extern int snapshot(int fd);
+
 // File thumbs_to_file.c
 extern int thumb_to_file(int tfd, int n);
 extern void thumbs_to_file(int tfd, int n);
