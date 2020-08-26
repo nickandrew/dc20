@@ -12,7 +12,6 @@ int thumb_to_file(int tfd, int n)
 	int ofd;
 	unsigned char thumb[4800];
 	char file[1024];
-	char buf[256];
 	
 	if (get_thumb(tfd, n, thumb) == -1)
 	  return(-1);
