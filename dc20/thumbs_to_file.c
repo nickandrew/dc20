@@ -1,4 +1,6 @@
 #include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
 
 #define HEADER "P5\n80 60\n255\n"
 
