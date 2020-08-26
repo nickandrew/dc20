@@ -20,6 +20,9 @@ extern int erasemem(int fd);
 // File get_info.c
 extern Dc20InfoPtr get_info(int fd);
 
+// File get_pic.c
+extern int get_pic(int fd, int which, unsigned char *pic, int low_res);
+
 // File get_thumb.c
 extern int get_thumb(int fd, int which, unsigned char *thumb);
 
