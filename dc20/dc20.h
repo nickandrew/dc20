@@ -20,3 +20,14 @@ extern int init_dc20(char *device, speed_t speed);
 
 // File send_pck.c
 extern int send_pck(int fd, unsigned char *pck);
+
+// File pics_to_file.c
+extern int pic_to_file(int tfd, int n, int low_res);
+extern void pics_to_file(int tfd, int n, int low_res);
+
+// File thumbs_to_file.c
+extern int thumb_to_file(int tfd, int n);
+extern void thumbs_to_file(int tfd, int n);
+
+// File toggle_res.c
+extern int toggle_res(int fd, Dc20InfoPtr dc20_info);

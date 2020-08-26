@@ -6,10 +6,7 @@
 
 #define MAGIC "COMET"
 
-pics_to_file(tfd, n, low_res)
-     int tfd;
-     int n;
-     int low_res;
+void pics_to_file(int tfd, int n, int low_res)
 {
  int i;
  
@@ -19,10 +16,7 @@ pics_to_file(tfd, n, low_res)
 }
    
 
-pic_to_file(tfd, n, low_res)
-     int tfd;
-     int n;
-     int low_res;
+int pic_to_file(int tfd, int n, int low_res)
 { int ofd;
  unsigned char pic[124928];
  char file[1024];

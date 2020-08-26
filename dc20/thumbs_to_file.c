@@ -7,9 +7,7 @@
 
 #define HEADER "P5\n80 60\n255\n"
 
-thumb_to_file(tfd, n)
-int tfd;
-int n;
+int thumb_to_file(int tfd, int n)
 {
 	int ofd;
 	unsigned char thumb[4800];
@@ -43,9 +41,7 @@ int n;
 	return(0);
 }
 
-thumbs_to_file(tfd, n)
-int tfd;
-int n;
+void thumbs_to_file(int tfd, int n)
 {
   int i;
   
