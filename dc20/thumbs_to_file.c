@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "dc20.h"
+
 #define HEADER "P5\n80 60\n255\n"
 
 thumb_to_file(tfd, n)

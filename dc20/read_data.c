@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "dc20.h"
+
 read_data(fd, buf, sz)
 int fd;
 unsigned char *buf;

@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "dc20.h"
+
 static int oldhash;
 
 hash_init()

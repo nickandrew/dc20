@@ -2,6 +2,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "dc20.h"
+
 #define MAGIC "COMET"
 
 pics_to_file(tfd, n, low_res)
