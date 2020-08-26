@@ -3,10 +3,7 @@
 
 #include "dc20.h"
 
-read_data(fd, buf, sz)
-int fd;
-unsigned char *buf;
-int sz;
+int read_data(int fd, unsigned char *buf, int sz)
 {
 	unsigned char ccsum;
 	unsigned char rcsum;
@@ -46,8 +43,7 @@ int sz;
 	return(0);
 }
 
-end_of_data(fd)
-int fd;
+int end_of_data(int fd)
 {
 	char c;
 

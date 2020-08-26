@@ -24,6 +24,10 @@ extern Dc20InfoPtr get_info(int fd);
 extern void close_dc20(int fd);
 extern int init_dc20(char *device, speed_t speed);
 
+// File read_data.c
+extern int read_data(int fd, unsigned char *buf, int sz);
+extern int end_of_data(int fd);
+
 // File send_pck.c
 extern int send_pck(int fd, unsigned char *pck);
 
