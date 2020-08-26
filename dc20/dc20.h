@@ -11,3 +11,5 @@ typedef struct dc20_info_s {
 } Dc20Info, *Dc20InfoPtr;
 
 Dc20Info *get_info(int);
+
+extern int send_pck(int fd, unsigned char *pck);

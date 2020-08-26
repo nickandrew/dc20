@@ -4,6 +4,8 @@
 #include <termios.h>
 #include <fcntl.h>
 
+#include "dc20.h"
+
 static unsigned char init_pck[] =
 	{0x41, 0x00, 0x11, 0x52, 0x00, 0x00, 0x00, 0x1A};
 

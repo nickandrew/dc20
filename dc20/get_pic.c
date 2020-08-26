@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "dc20.h"
+
 static unsigned char pic_pck[] =
 	{0x51, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A};
 
