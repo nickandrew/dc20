@@ -20,12 +20,7 @@ int pic_to_file(int tfd, int n, int low_res)
 { int ofd;
  unsigned char pic[124928];
  char file[1024];
- char header[256];
  int sz = ((low_res) ? 61 : 122)*1024;
- int lsz = ((low_res) ? 256 : 512);
- int rsz = ((low_res) ? 256  - 6 : 512 - 11);
- int off;
- int i, j;
  
  if (get_pic(tfd, n, pic, low_res) == -1)
    return(-1);
