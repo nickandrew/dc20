@@ -5,8 +5,10 @@ OBJ = main.o send_pck.o get_info.o init_dc20.o get_thumb.o read_data.o \
 	thumbs_to_file.o get_pic.o pics_to_file.o hash_mark.o erasemem.o \
 	snapshot.o wait_till_ready.o toggle_res.o
 
+CFLAGS=-Wall
+
 %.o : %.c
-	gcc -c -g $<
+	gcc $(CFLAGS) -c -g $<
 
 all: dc20bin cmttoppm cmt2ppm
 
