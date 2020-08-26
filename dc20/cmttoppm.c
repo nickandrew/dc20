@@ -424,7 +424,7 @@ void usage(void)
   exit(1);
 }
 
-void main(int argc, char *const *argv)
+int main(int argc, char *const *argv)
 {
   int infd, c;
   FILE *outfp;

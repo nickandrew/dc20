@@ -1,13 +1,11 @@
-#include "dc20.h"
+#include <stdio.h>
 
-#define NULL 0L
+#include "dc20.h"
 
 static unsigned char info_pck[] =
 	{0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A};
 
-Dc20InfoPtr
-get_info(fd)
-int fd;
+Dc20InfoPtr get_info(int fd)
 {
 	static Dc20Info result;
 	unsigned char buf[256];

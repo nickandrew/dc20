@@ -1,15 +1,17 @@
 #include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "dc20.h"
 
 #define HEADER "P5\n80 60\n255\n"
 
-thumb_to_file(tfd, n)
-int tfd;
-int n;
+int thumb_to_file(int tfd, int n)
 {
 	int ofd;
 	unsigned char thumb[4800];
 	char file[1024];
-	char buf[256];
 	
 	if (get_thumb(tfd, n, thumb) == -1)
 	  return(-1);
@@ -38,9 +40,7 @@ int n;
 	return(0);
 }
 
-thumbs_to_file(tfd, n)
-int tfd;
-int n;
+void thumbs_to_file(int tfd, int n)
 {
   int i;
   

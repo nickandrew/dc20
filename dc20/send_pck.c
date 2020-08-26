@@ -1,6 +1,9 @@
-send_pck(fd, pck)
-int fd;
-unsigned char *pck;
+#include <stdio.h>
+#include <unistd.h>
+
+#include "dc20.h"
+
+int send_pck(int fd, unsigned char *pck)
 {
 	int n;
 	unsigned char r;

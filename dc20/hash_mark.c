@@ -1,16 +1,15 @@
 #include <stdio.h>
 
+#include "dc20.h"
+
 static int oldhash;
 
-hash_init()
+void hash_init(void)
 {
 	oldhash = 0;
 }
 
-hash_mark(in, total, range)
-int in;
-int total;
-int range;
+void hash_mark(int in, int total, int range)
 {
 	int percent = (in) ? (total*100)/in : 0;
 	int h = (percent) ? (range*100)/percent : 0;
@@ -20,5 +19,4 @@ int range;
 		fflush(stdout);
 		oldhash++;
 	}
-
 }

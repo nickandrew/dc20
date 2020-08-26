@@ -1,13 +1,12 @@
 #include <stdio.h>
+#include <string.h>
+
+#include "dc20.h"
 
 static unsigned char pic_pck[] =
 	{0x51, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A};
 
-get_pic(fd, which, pic, low_res)
-int fd;
-int which;
-unsigned char *pic;
-int low_res;
+int get_pic(int fd, int which, unsigned char *pic, int low_res)
 {
 	unsigned char buf[1024];
 	int n = (low_res) ? 61 : 122;
