@@ -20,6 +20,9 @@ extern int erasemem(int fd);
 // File get_info.c
 extern Dc20InfoPtr get_info(int fd);
 
+// File get_thumb.c
+extern int get_thumb(int fd, int which, unsigned char *thumb);
+
 // File init_dc20.c
 extern void close_dc20(int fd);
 extern int init_dc20(char *device, speed_t speed);

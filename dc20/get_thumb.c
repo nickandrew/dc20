@@ -6,10 +6,7 @@
 static unsigned char thumb_pck[] =
 	{0x56, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1A};
 
-get_thumb(fd, which, thumb)
-int fd;
-int which;
-unsigned char *thumb;
+int get_thumb(int fd, int which, unsigned char *thumb)
 {
 	unsigned char buf[1024];
 	int i;
