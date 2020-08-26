@@ -14,6 +14,9 @@ typedef struct dc20_info_s {
 
 Dc20Info *get_info(int);
 
+// File erasemem.c
+extern int erasemem(int fd);
+
 // File init_dc20.c
 extern void close_dc20(int fd);
 extern int init_dc20(char *device, speed_t speed);
