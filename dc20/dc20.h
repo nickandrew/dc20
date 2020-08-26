@@ -54,3 +54,6 @@ extern void thumbs_to_file(int tfd, int n);
 
 // File toggle_res.c
 extern int toggle_res(int fd, Dc20InfoPtr dc20_info);
+
+// File wait_till_ready.c
+extern int wait_till_ready(int fd);

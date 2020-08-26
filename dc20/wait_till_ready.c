@@ -3,7 +3,8 @@
 
 #include "dc20.h"
 
-int wait_till_ready( fd ) {
+int wait_till_ready(int fd)
+{
   char r;
   int n;
 
