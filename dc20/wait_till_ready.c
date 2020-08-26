@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <unistd.h>
+
+#include "dc20.h"
+
 int wait_till_ready( fd ) {
   char r;
   int n;

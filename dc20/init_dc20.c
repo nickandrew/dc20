@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "dc20.h"
 

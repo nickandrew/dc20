@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "dc20.h"
 
 int send_pck(int fd, unsigned char *pck)
