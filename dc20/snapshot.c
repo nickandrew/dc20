@@ -7,8 +7,6 @@ static unsigned char snap_pck[] =
 
 int snapshot(int fd)
 {
-  char r;
-
   if (send_pck(fd, snap_pck) == -1) {
     perror("send_pck");
     return(0);

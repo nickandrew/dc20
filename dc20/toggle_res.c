@@ -7,8 +7,6 @@ static unsigned char pck[] =
 
 int toggle_res(int fd, Dc20InfoPtr dc20_info)
 {
-  char r;
-
   pck[2] = (dc20_info->flags.low_res) ? 0 : 1;
   
   if (send_pck(fd, pck) == -1) {
