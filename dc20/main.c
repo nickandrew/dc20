@@ -18,7 +18,7 @@ static unsigned char init_pck[] =
 \t -t #      : Grab thumbnail\n\
 \t device    : Serial port camera is attached to"
 
-main(int argc, char *argv[] )
+int main(int argc, char *argv[] )
 {
   int do_info = 0;
   int do_snaps = 0;
